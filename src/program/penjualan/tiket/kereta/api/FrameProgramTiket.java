@@ -10,7 +10,8 @@ import javax.swing.DefaultListModel;
  *
  * @author Ardy Sendleep
  */
-public class FrameProgramTiket extends javax.swing.JFrame { 
+public class FrameProgramTiket extends javax.swing.JFrame {
+
     DefaultListModel<ClassProgramTiket> Tiket = new DefaultListModel<>();
     private String Nama;
     private String KodeKereta;
@@ -21,6 +22,8 @@ public class FrameProgramTiket extends javax.swing.JFrame {
     private float JumlahTiket;
     private float Totalbayar;
     private ClassProgramTiket ClassProgramTiket;
+    private boolean first;
+
     /**
      * Creates new form FrameProgramTiket
      */
@@ -31,22 +34,19 @@ public class FrameProgramTiket extends javax.swing.JFrame {
         cbokodeKereta.addItem("KRT002");
         cbokodeKereta.addItem("KRT003");
         cbokodeKereta.addItem("KRT004");
-        
+
         jurusan.addItem("Bekasi - Pasar Senen");
         jurusan.addItem("Bekasi - Maggarai");
         jurusan.addItem("Bekasi - Gambir");
         jurusan.addItem("Bekasi - Jakarta Kota");
-        
-      
-        jenisTiket.addItem("Anak");
-        jenisTiket.addItem("Dewasa");
-        
-        
+
         jenisKereta.addItem("Eksekutif");
         jenisKereta.addItem("Bisnis");
         jenisKereta.addItem("Ekonomi");
-           
         
+        jenisTiket.addItem("Anak");
+        jenisTiket.addItem("Dewasa");
+
     }
 
     /**
@@ -127,6 +127,11 @@ public class FrameProgramTiket extends javax.swing.JFrame {
                 txtJumlahTiketActionPerformed(evt);
             }
         });
+        txtJumlahTiket.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtJumlahTiketKeyReleased(evt);
+            }
+        });
 
         txtHargaTiket.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         txtHargaTiket.addActionListener(new java.awt.event.ActionListener() {
@@ -166,6 +171,12 @@ public class FrameProgramTiket extends javax.swing.JFrame {
 
         jLabel4.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel4.setText("Nama");
+
+        jenisTiket.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jenisTiketItemStateChanged(evt);
+            }
+        });
 
         reset.setText("Reset");
         reset.addActionListener(new java.awt.event.ActionListener() {
@@ -295,32 +306,33 @@ public class FrameProgramTiket extends javax.swing.JFrame {
 
     private void ListViewMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ListViewMouseClicked
         // TODO add your handling code here:
-        int index=ListView.getSelectedIndex();
+        int index = ListView.getSelectedIndex();
         ClassProgramTiket LN = Tiket.getElementAt(index);
         txtNama.setText(LN.Nama);
         txtHargaTiket.setText(Float.toString(LN.HargaTiket));
         txtJumlahTiket.setText(Float.toString(LN.JumlahTiket));
-        txtTotalBayar.setText(Float.toString(LN.Totalbayar)); 
-        
+        txtTotalBayar.setText(Float.toString(LN.Totalbayar));
+
     }//GEN-LAST:event_ListViewMouseClicked
 
     private void btnProsesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProsesActionPerformed
         // TODO add your handling code here:
         ClassProgramTiket LN = new ClassProgramTiket();
-        LN.Nama=txtNama.getText();
-        LN.KodeKereta= (String)cbokodeKereta.getSelectedItem();
-        LN.NamaKereta=(String)jenisKereta.getSelectedItem();
-        LN.Jurusan= (String)jurusan.getSelectedItem();
-        LN.JenisTiket= (String)jenisTiket.getSelectedItem();
-        LN.HargaTiket= Float.parseFloat(txtHargaTiket.getText());
-        LN.JumlahTiket= Float.parseFloat(txtJumlahTiket.getText());
-        LN.Totalbayar= Float.parseFloat(txtTotalBayar.getText());        
+        LN.Nama = txtNama.getText();
+        LN.KodeKereta = (String) cbokodeKereta.getSelectedItem();
+        LN.NamaKereta = (String) jenisKereta.getSelectedItem();
+        LN.Jurusan = (String) jurusan.getSelectedItem();
+        LN.JenisTiket = (String) jenisTiket.getSelectedItem();
+        LN.HargaTiket = Float.parseFloat(txtHargaTiket.getText());
+        LN.JumlahTiket = Float.parseFloat(txtJumlahTiket.getText());
+        LN.Totalbayar = Float.parseFloat(txtTotalBayar.getText());
         txtNama.setText("");
         txtHargaTiket.setText("");
         txtJumlahTiket.setText("");
         txtTotalBayar.setText("");
         Tiket.addElement(LN);
-        
+        program.penjualan.tiket.kereta.api.ClassProgramTiket newLN = getClassProgramTiket(LN);
+
     }//GEN-LAST:event_btnProsesActionPerformed
 
     private void resetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetActionPerformed
@@ -332,6 +344,64 @@ public class FrameProgramTiket extends javax.swing.JFrame {
         txtJumlahTiket.setText("");
         txtTotalBayar.setText("");
     }//GEN-LAST:event_resetActionPerformed
+
+    private void txtJumlahTiketKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtJumlahTiketKeyReleased
+        // TODO add your handling code here:
+        if (txtJumlahTiket.getText() != null && !txtJumlahTiket.equals("")) {
+            float total = Float.parseFloat(txtHargaTiket.getText()) * Float.parseFloat(txtJumlahTiket.getText());
+            txtTotalBayar.setText("" + total);
+        }
+    }//GEN-LAST:event_txtJumlahTiketKeyReleased
+
+    private void jenisTiketItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jenisTiketItemStateChanged
+
+        setHarga();
+    }//GEN-LAST:event_jenisTiketItemStateChanged
+
+    private ClassProgramTiket getClassProgramTiket(ClassProgramTiket cpt) {
+        //MAPPING HARGA
+        //KODE KERETA
+        //KRT001,KRT002,KRT003,KRT004
+        //JURUSAN
+        //Bekasi - Pasar Senen,Bekasi - Maggarai,Bekasi - Gambir,Bekasi - Jakarta Kota
+        //JENIS TIKET
+        //Anak,Dewasa
+        //JENIS KERETA
+        //Ekonomi,Bisnis,Eksekutif
+        if (cpt.KodeKereta.equals("KRT001") && cpt.Jurusan.equals("Bekasi - Pasar Senen")
+                && cpt.JenisTiket.equals("Anak") && cpt.NamaKereta.equals("Ekonomi")) {
+            cpt.HargaTiket = 100000F;
+        } else if (cpt.KodeKereta.equals("KRT001") && cpt.Jurusan.equals("Bekasi - Pasar Senen")
+                && cpt.JenisTiket.equals("Anak") && cpt.NamaKereta.equals("Bisnis")) {
+            cpt.HargaTiket = 200000F;
+        } else if (cpt.KodeKereta.equals("KRT001") && cpt.Jurusan.equals("Bekasi - Pasar Senen")
+                && cpt.JenisTiket.equals("Anak") && cpt.NamaKereta.equals("Eksekutif")) {
+            cpt.HargaTiket = 250000F;
+        } else if (cpt.KodeKereta.equals("KRT001") && cpt.Jurusan.equals("Bekasi - Pasar Senen")
+                && cpt.JenisTiket.equals("Dewasa") && cpt.NamaKereta.equals("Ekonomi")) {
+            cpt.HargaTiket = 250000F;
+        } else if (cpt.KodeKereta.equals("KRT001") && cpt.Jurusan.equals("Bekasi - Pasar Senen")
+                && cpt.JenisTiket.equals("Dewasa") && cpt.NamaKereta.equals("Bisnis")) {
+            cpt.HargaTiket = 275000F;
+        } else if (cpt.KodeKereta.equals("KRT001") && cpt.Jurusan.equals("Bekasi - Pasar Senen")
+                && cpt.JenisTiket.equals("Dewasa") && cpt.NamaKereta.equals("Eksekutif")) {
+            cpt.HargaTiket = 300000F;
+        } else {
+            cpt.HargaTiket = 50000F;
+        }
+        cpt.Totalbayar = cpt.HargaTiket * cpt.JumlahTiket;
+        return cpt;
+    }
+
+    private void setHarga() {
+        ClassProgramTiket LN = new ClassProgramTiket();
+        LN.KodeKereta = (String) cbokodeKereta.getSelectedItem();
+        LN.NamaKereta = (String) jenisKereta.getSelectedItem();
+        LN.Jurusan = (String) jurusan.getSelectedItem();
+        LN.JenisTiket = (String) jenisTiket.getSelectedItem();
+        program.penjualan.tiket.kereta.api.ClassProgramTiket newLN = getClassProgramTiket(LN);
+        txtHargaTiket.setText("" + newLN.HargaTiket);
+    }
 
     /**
      * @param args the command line arguments

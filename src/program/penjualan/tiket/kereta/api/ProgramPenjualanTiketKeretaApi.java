@@ -14,7 +14,8 @@ public class ProgramPenjualanTiketKeretaApi {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-         FrameProgramTiket Laund = new FrameProgramTiket();
+        FrameProgramTiket Laund = new FrameProgramTiket();
+        Laund.setLocationRelativeTo(null);
         Laund.setVisible(true);
     }
 }
