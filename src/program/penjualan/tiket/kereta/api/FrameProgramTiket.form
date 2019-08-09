@@ -267,6 +267,9 @@
           <StringArray count="0"/>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbokodeKeretaItemStateChanged"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JComboBox" name="jurusan">
       <Properties>
@@ -275,6 +278,7 @@
         </Property>
       </Properties>
       <Events>
+        <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="jurusanItemStateChanged"/>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jurusanActionPerformed"/>
       </Events>
     </Component>
@@ -334,6 +338,9 @@
           <StringArray count="0"/>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="jenisKeretaItemStateChanged"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="reset">
       <Properties>

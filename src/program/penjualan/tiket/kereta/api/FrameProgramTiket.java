@@ -43,7 +43,7 @@ public class FrameProgramTiket extends javax.swing.JFrame {
         jenisKereta.addItem("Eksekutif");
         jenisKereta.addItem("Bisnis");
         jenisKereta.addItem("Ekonomi");
-        
+
         jenisTiket.addItem("Anak");
         jenisTiket.addItem("Dewasa");
 
@@ -147,6 +147,17 @@ public class FrameProgramTiket extends javax.swing.JFrame {
             }
         });
 
+        cbokodeKereta.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbokodeKeretaItemStateChanged(evt);
+            }
+        });
+
+        jurusan.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jurusanItemStateChanged(evt);
+            }
+        });
         jurusan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jurusanActionPerformed(evt);
@@ -175,6 +186,12 @@ public class FrameProgramTiket extends javax.swing.JFrame {
         jenisTiket.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 jenisTiketItemStateChanged(evt);
+            }
+        });
+
+        jenisKereta.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jenisKeretaItemStateChanged(evt);
             }
         });
 
@@ -331,7 +348,6 @@ public class FrameProgramTiket extends javax.swing.JFrame {
         txtJumlahTiket.setText("");
         txtTotalBayar.setText("");
         Tiket.addElement(LN);
-        program.penjualan.tiket.kereta.api.ClassProgramTiket newLN = getClassProgramTiket(LN);
 
     }//GEN-LAST:event_btnProsesActionPerformed
 
@@ -346,17 +362,28 @@ public class FrameProgramTiket extends javax.swing.JFrame {
     }//GEN-LAST:event_resetActionPerformed
 
     private void txtJumlahTiketKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtJumlahTiketKeyReleased
-        // TODO add your handling code here:
-        if (txtJumlahTiket.getText() != null && !txtJumlahTiket.equals("")) {
-            float total = Float.parseFloat(txtHargaTiket.getText()) * Float.parseFloat(txtJumlahTiket.getText());
-            txtTotalBayar.setText("" + total);
-        }
+        hitungTotal();
     }//GEN-LAST:event_txtJumlahTiketKeyReleased
 
     private void jenisTiketItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jenisTiketItemStateChanged
-
         setHarga();
+        hitungTotal();
     }//GEN-LAST:event_jenisTiketItemStateChanged
+
+    private void cbokodeKeretaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbokodeKeretaItemStateChanged
+        setHarga();
+        hitungTotal();
+    }//GEN-LAST:event_cbokodeKeretaItemStateChanged
+
+    private void jenisKeretaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jenisKeretaItemStateChanged
+        setHarga();
+        hitungTotal();
+    }//GEN-LAST:event_jenisKeretaItemStateChanged
+
+    private void jurusanItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jurusanItemStateChanged
+        setHarga();
+        hitungTotal();
+    }//GEN-LAST:event_jurusanItemStateChanged
 
     private ClassProgramTiket getClassProgramTiket(ClassProgramTiket cpt) {
         //MAPPING HARGA
@@ -399,8 +426,12 @@ public class FrameProgramTiket extends javax.swing.JFrame {
         LN.NamaKereta = (String) jenisKereta.getSelectedItem();
         LN.Jurusan = (String) jurusan.getSelectedItem();
         LN.JenisTiket = (String) jenisTiket.getSelectedItem();
-        program.penjualan.tiket.kereta.api.ClassProgramTiket newLN = getClassProgramTiket(LN);
-        txtHargaTiket.setText("" + newLN.HargaTiket);
+        if (LN.KodeKereta != null && LN.NamaKereta != null
+                && LN.Jurusan != null && LN.JenisTiket != null) {
+            program.penjualan.tiket.kereta.api.ClassProgramTiket newLN = getClassProgramTiket(LN);
+            txtHargaTiket.setText("" + newLN.HargaTiket);
+        }
+
     }
 
     /**
@@ -471,4 +502,12 @@ public class FrameProgramTiket extends javax.swing.JFrame {
     private javax.swing.JTextField txtNama;
     private javax.swing.JTextField txtTotalBayar;
     // End of variables declaration//GEN-END:variables
+
+    private void hitungTotal() {
+        if (txtJumlahTiket.getText() != null && !txtJumlahTiket.getText().equals("") && !txtJumlahTiket.getText().isEmpty()
+                && txtHargaTiket.getText() != null && !txtHargaTiket.getText().equals("") && !txtHargaTiket.getText().isEmpty()) {
+            float total = Float.parseFloat(txtHargaTiket.getText()) * Float.parseFloat(txtJumlahTiket.getText());
+            txtTotalBayar.setText("" + total);
+        }
+    }
 }
